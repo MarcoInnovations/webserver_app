@@ -1,0 +1,41 @@
+docker build -t k8s_python .
+
+docker images
+
+docker tag e9ae3c220b23 aws_account_id.dkr.ecr.region.amazonaws.com/my-web-app
+
+kubectl apply -f demo_deployment.yaml --kubeconfig=../desktop_private_vpc/output/kubeconfig_mrt51
+
+kubectl logs -l app=k8s-python --kubeconfig=../desktop_private_vpc/output/kubeconfig_mrt51
+
+kubectl delete -f demo_deployment.yaml --kubeconfig=../desktop_private_vpc/output/kubeconfig_mrt51
+
+
+kubectl exec --kubeconfig=../desktop_private_vpc/output/kubeconfig_mrt51 -it k8s-python-5b5495dfdc-mfmc6 -- /bin/bash 
+
+kubectl get pods -l app=k8s-python --kubeconfig=../desktop_private_vpc/output/kubeconfig_mrt51
+
+kubectl get deployment -l app=k8s-python --kubeconfig=../desktop_private_vpc/output/kubeconfig_mrt51
+
+kubectl get services --kubeconfig=../desktop_private_vpc/output/kubeconfig_mrt51
+
+
+
+Get Load Balancer DNS name:
+kubectl get service k8s-python --kubeconfig=../desktop_private_vpc/output/kubeconfig_mrt51 -o json |jq .status.loadBalancer.ingress[0].hostname
+~or~
+kubectl get service k8s-python -o json --kubeconfig=../desktop_private_vpc/output/kubeconfig_mrt51 | jq -r '.status.loadBalancer.ingress[0].hostname'
+
+
+Get DNS Zone ID:
+aws --region us-east-1 elbv2 describe-load-balancers --query 'LoadBalancers[?DNSName==`"internal-a620b83d8315f11e9a4fe0a614e05671-292382231.us-east-1.elb.amazonaws.com"`].CanonicalHostedZoneId' --output text --profile=devustransit
+
+
+aws --region us-east-1 elb describe-load-balancers --output json --profile=devustransit | jq -r '.LoadBalancerDescriptions[0].CanonicalHostedZoneNameID'
+aws --region us-east-1 elb describe-load-balancers --output json --profile=devustransit | jq -r '.LoadBalancerDescriptions[0].DNSName'
+
+
+kubectl create -f https://k8s.io/examples/controllers/nginx-deployment.yaml --kubeconfig=../desktop_private_vpc/output/kubeconfig_mrt51
+
+kubectl delete -f https://k8s.io/examples/controllers/nginx-deployment.yaml --kubeconfig=../desktop_private_vpc/output/kubeconfig_mrt51
+

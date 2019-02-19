@@ -1,0 +1,16 @@
+{
+	"Changes": [
+		{
+			"Action": "CREATE",
+			"ResourceRecordSet": {
+				"Name": "demo.k8s-transit.us-east-1.aws.cloud.bmw",
+				"Type": "A",
+				"AliasTarget": {
+					"HostedZoneId": "Z35SXDOTRQ7X7K",
+					"DNSName": "dualstack.internal-a620b83d8315f11e9a4fe0a614e05671-292382231.us-east-1.elb.amazonaws.com.",
+					"EvaluateTargetHealth": false
+				}
+			}
+		}
+	]
+}

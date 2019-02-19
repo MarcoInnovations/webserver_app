@@ -1,0 +1,1 @@
+last used imagename:  demo_eks_python_webserver
